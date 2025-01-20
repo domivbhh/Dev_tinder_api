@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator=require('validator')
 
 const userSchema = new mongoose.Schema(
   {
@@ -16,11 +17,21 @@ const userSchema = new mongoose.Schema(
       lowercase: true,   
       required: true,
       unique: true,
-      trim:true
+      trim:true,
+      validate(value){
+        if(!validator.isEmail(value)){
+          throw new Error('Invalid email',value)
+      }
+    }
     },
     password: {
       type: String,
       required: true,
+      validate(value){
+          if(!validator.isStrongPassword(value)){
+              throw new Error('Password is weak')
+       }
+      }
     },
     age: {
       type: Number,
@@ -37,6 +48,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default:
         "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png",
+        validate(value){
+          if(!validator.isURL(value)){
+            throw new Error('Invalid URL',value)
+        }
+      }
     },
     about: {
       type: String,

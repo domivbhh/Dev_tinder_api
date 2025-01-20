@@ -74,10 +74,22 @@ catch(error){
 const updateUser=async(req,res)=>{
     try {
         const {id}=req.params
-        const updateUser=await User.findByIdAndUpdate({_id:id},req.body,{new:true,runValidators:true})
-        res.status(200).json({message:'User updated successfully',data:updateUser})
+        const{emailId,firstName,skills,lastName,age,gender}=req.body
+        const allowedUpdates=['firstName','lastName','age','gender',"photoUrl","skills"]
+        
+        const isValidOperation=Object.keys(req.body).every((update)=>allowedUpdates.includes(update))
+        const isValidSkills=skills.length<=5
 
-    } catch (error) {
+        if(isValidOperation && isValidSkills){
+            const updateUser=await User.findByIdAndUpdate({_id:id},req.body,{new:true,runValidators:true})
+            res.status(200).json({message:'User updated successfully',data:updateUser})
+        }
+        else{
+            res.status(400).json({message:'Invalid updates'})
+        }
+
+    } 
+    catch (error) {
     res.status(500).json({ message: "Error while deleting data", error: error.message });
     }
 }
