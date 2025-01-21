@@ -5,8 +5,9 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      minLength: 3,
+      minLength:3,
       required: true,
+      maxLength:40,
     },
     lastName: {
       type: String,
@@ -18,20 +19,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim:true,
-      validate(value){
-        if(!validator.isEmail(value)){
-          throw new Error('Invalid email',value)
-      }
-    }
+    //   validate(value){
+    //     if(!validator.isEmail(value)){
+    //       throw new Error('Invalid email',value)
+    //   }
+    // }
     },
     password: {
       type: String,
       required: true,
-      validate(value){
-          if(!validator.isStrongPassword(value)){
-              throw new Error('Password is weak')
-       }
-      }
+      // validate(value){
+      //     if(!validator.isStrongPassword(value)){
+      //         throw new Error('Password is weak')
+      //  }
+      // }
     },
     age: {
       type: Number,
