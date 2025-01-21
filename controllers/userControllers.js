@@ -1,14 +1,22 @@
 const User = require("../models/userModel");
 const bcrypt=require('bcryptjs');
-const validateSignUp = require("../utils/validation");
-const jwt=require('jsonwebtoken')
-
+const {validateSignUp,validateUpdate} = require("../utils/validation");
+const jwt=require('jsonwebtoken');
+const { get } = require("mongoose");
 
 const signUp=async(req,res)=>{
     try {
         const{firstName,lastName,emailId,age,gender,password}=req.body
 
         validateSignUp(req)
+
+        if(emailId){
+            const emailExist=await User.findOne({emailId})
+            if(emailExist){
+                // return res.status(400).json({message:'Email already exists'})
+                throw new Error('Email already exists')
+            }
+        }
         let hashPassword
         if(password){
             hashPassword=await bcrypt.hash(password,10)
@@ -21,7 +29,7 @@ const signUp=async(req,res)=>{
             emailId,
             age,gender })
         await user.save()
-        res.status(201).json({message:'User created successfully',user})      
+        res.status(201).json({message:'User created successfully'})      
     } 
     catch (error) {
         res.status(500).json({message:'User cannot be created',error:error.message})
@@ -53,6 +61,16 @@ const signIn=async(req,res)=>{
     } 
     catch (error) {
         res.status(500).json({message:'User cannot be logged in',error:error.message})
+    }
+}
+
+
+const signOut=async(req,res)=>{
+    try {
+        res.cookie('token','',{expires:new Date(Date.now())}).status(200).json({message:'User logged out successfully'})    
+    } 
+    catch (error) {
+        res.status(500).json({message:'User cannot be logged out',error:error.message})
     }
 }
 
@@ -107,16 +125,23 @@ catch(error){
 
 const updateUser=async(req,res)=>{
     try {
-        const {id}=req.params
+        const profile=req.user
         const{emailId,firstName,skills,lastName,age,gender}=req.body
-        const allowedUpdates=['firstName','lastName','age','gender',"photoUrl","skills"]
+        
+        const allowedUpdates=['firstName','lastName','age','gender',"photoUrl","skills","about"]
         
         const isValidOperation=Object.keys(req.body).every((update)=>allowedUpdates.includes(update))
         const isValidSkills=skills.length<=5
+        
+        validateUpdate(req)
 
-        if(isValidOperation && isValidSkills){
-            const updateUser=await User.findByIdAndUpdate({_id:id},req.body,{new:true,runValidators:true})
-            res.status(200).json({message:'User updated successfully',data:updateUser})
+        if(!isValidSkills){
+            return res.status(400).json({message:'Skills cannot be more than 5'})
+        }
+
+        if(isValidOperation){
+            const updateUser=await User.findByIdAndUpdate({_id:profile._id},req.body,{new:true,runValidators:true})
+            res.status(200).json({message:updateUser.firstName+" "+'updated successfully'})
         }
         else{
             res.status(400).json({message:'Invalid updates'})
@@ -130,4 +155,4 @@ const updateUser=async(req,res)=>{
 
 
 
-module.exports={signUp,signIn,getUsers,deletUser,updateUser,getProfile}
+module.exports={signUp,signIn,getUsers,deletUser,updateUser,getProfile,signOut}

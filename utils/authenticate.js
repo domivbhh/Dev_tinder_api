@@ -13,11 +13,11 @@ const authenticate = async(req, res, next) => {
                 next()  
             }
         else{
-            res.status(400).json({message:'Please login again'})
+            res.status(400).json({message:'Unauthenticated'})
         }
     } 
     else{
-        res.status(400).json({message:'Unauthenticated'})
+        res.status(400).json({message:'Please login again'})
     }
     }
     catch (error) {

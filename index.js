@@ -15,8 +15,8 @@ app.use(express.json())
 
 
 
-app.use('/user',userRouter)
 app.use('/connection',connectionRouter)
+app.use('/',userRouter)
 
 
  

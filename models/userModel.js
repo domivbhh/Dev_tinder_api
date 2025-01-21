@@ -19,20 +19,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim:true,
-    //   validate(value){
-    //     if(!validator.isEmail(value)){
-    //       throw new Error('Invalid email',value)
-    //   }
-    // }
     },
     password: {
       type: String,
       required: true,
-      // validate(value){
-      //     if(!validator.isStrongPassword(value)){
-      //         throw new Error('Password is weak')
-      //  }
-      // }
     },
     age: {
       type: Number,
@@ -67,6 +57,7 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 
 
 const User=mongoose.model('Users',userSchema)
