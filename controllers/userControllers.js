@@ -122,6 +122,17 @@ catch(error){
 }
 
 
+const forgotPassword=async(req,res)=>{
+    try {
+        const {password}=req.body
+        
+    } 
+    catch (error) {
+            res.status(500).json({message:'Error in reseting the password',error:error.message})    
+    }
+}
+
+
 
 const updateUser=async(req,res)=>{
     try {
