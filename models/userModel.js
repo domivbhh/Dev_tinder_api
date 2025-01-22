@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       lowercase: true,   
       required: true,
+      index:true,
       unique: true,
       trim:true,
     },
@@ -62,7 +63,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-
+userSchema.index({firstName:1,lastName:1})
 
 const User=mongoose.model('Users',userSchema)
 module.exports=User
