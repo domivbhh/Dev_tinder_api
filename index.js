@@ -4,6 +4,7 @@ const ConnectDb = require('./ConnectDb')
 const userRouter=require('./routers/userRouter')
 const cookieParser=require('cookie-parser')
 const connectionRouter=require('./routers/connectionRouter')
+const feedRouter=require('./routers/feedRouter')
 
 
 
@@ -17,6 +18,7 @@ app.use(express.json())
 
 
 app.use('/connection',connectionRouter)
+app.use('/user',feedRouter)
 app.use('/',userRouter)
 
 
