@@ -5,7 +5,7 @@ const userRouter=require('./routers/userRouter')
 const cookieParser=require('cookie-parser')
 const connectionRouter=require('./routers/connectionRouter')
 const feedRouter=require('./routers/feedRouter')
-
+const cors=require('cors')
 
 
 //intialize express
@@ -13,7 +13,8 @@ const app=express()
 app.use(cookieParser())
 dotenv.config()
  
-app.use(express.json())   
+app.use(express.json()) 
+app.use(cors())  
 
 
 

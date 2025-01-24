@@ -77,9 +77,14 @@ const pendingRequest=async(req,res)=>{
 
 const getFeed=async(req,res)=>{
     try {
-        const loggedInUser=req.user   
-        const limit=req.query.limit || 2
+        let loggedInUser=req.user   
+        let limit=req.query.limit || 2
         const page=req.query.page || 1
+
+
+        if(limit>10){
+            limit=10
+        }
 
         const skip=(page-1)*limit
         // console.log(page,limit)
@@ -92,10 +97,16 @@ const getFeed=async(req,res)=>{
         
 
         const feed=await User.find().select('firstName lastName gender about').skip(skip).limit(limit)
-        
+
         const feedUser=feed.filter((ele)=>!hideUser.toString().includes(ele._id.toString()))
 
         const result=feedUser.filter((ele)=>ele._id.toString()!==loggedInUser._id.toString())
+
+
+        if (result.length < 1) {
+          throw new Error("No users Found");
+        }
+        
 
         res.status(200).json({
                 count:result.length,

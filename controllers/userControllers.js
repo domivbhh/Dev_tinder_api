@@ -49,7 +49,7 @@ const signIn=async(req,res)=>{
             const verifyPassword=await bcrypt.compare(password,verifyEmail[0].password)
             if(verifyPassword){
                 const jwtToken=await jwt.sign({_id:verifyEmail[0]._id},process.env.JWT_SECRET,{expiresIn:'1d'})
-                res.cookie("token",jwtToken,{expires:new Date(Date.now()+8*3600000)}).status(200).json({message:'User logged in successfully'})
+                res.cookie("token",jwtToken,{expires:new Date(Date.now()+8*3600000)}).status(200).json({message:'User logged in successfully',data:verifyEmail[0]})
             }
             else{
                 res.status(400).json({message:'Invalid credentials'})
