@@ -5,7 +5,7 @@ const authenticate = async(req, res, next) => {
     try {
         const{token}=req.cookies
         if(token){
-            const jwtVerify=jwt.verify(token,process.env.JWT_SECRET)
+            const jwtVerify=jwt.verify(token,'dominar.400')
             if(jwtVerify){
                 const{_id}=jwtVerify
                 const profile=await User.findById(_id).select('-password -__v')
