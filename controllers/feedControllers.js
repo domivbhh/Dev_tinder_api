@@ -11,7 +11,8 @@ const getConnections=async(req,res,next)=>{
             { fromUserId: loggedInUser._id, status: "accepted"},
             { toUserId: loggedInUser._id, status: "accepted"},
           ],
-        }).populate(`fromUserId toUserId`,["firstName","lastName",'gender','about']);
+        }).populate(`fromUserId toUserId`,["firstName","lastName",'gender','about',"photoUrl","age"]);
+        // console.log(connection)
         if(connection.length>0){
             const data=connection.map((ele)=>ele.fromUserId._id.toString()===loggedInUser._id.toString()?ele.toUserId:ele.fromUserId)
             res.status(200).json({
@@ -19,7 +20,10 @@ const getConnections=async(req,res,next)=>{
             })
         }
         else{
-            throw new Error("No connections found")
+            // throw new Error("No connections found")
+            res.status(200).json({
+              message:"No Connections Found"
+            })
         }
         }
     catch (error) {
@@ -46,7 +50,10 @@ const givenRequest = async (req, res) => {
     if (pendingRequest.length > 0) {
       res.status(200).json({ data: pendingRequest });
     } else {
-      throw new Error("No request received");
+      // throw new Error();
+      res.status(200).json({
+        message: "No request received",
+      });
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -78,7 +85,7 @@ const pendingRequest=async(req,res)=>{
 const getFeed=async(req,res)=>{
     try {
         let loggedInUser=req.user   
-        let limit=req.query.limit || 2
+        let limit=req.query.limit || 5
         const page=req.query.page || 1
 
 
@@ -96,7 +103,7 @@ const getFeed=async(req,res)=>{
         const hideUser=connections.map((ele)=>ele.fromUserId.toString()===loggedInUser._id.toString()?ele.toUserId:ele.fromUserId)
         
 
-        const feed=await User.find().select('firstName lastName gender about').skip(skip).limit(limit)
+        const feed=await User.find().select('firstName lastName gender about photoUrl').skip(skip).limit(limit)
 
         const feedUser=feed.filter((ele)=>!hideUser.toString().includes(ele._id.toString()))
 

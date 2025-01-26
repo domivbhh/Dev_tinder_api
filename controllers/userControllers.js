@@ -137,16 +137,17 @@ const forgotPassword=async(req,res)=>{
 const updateUser=async(req,res)=>{
     try {
         const profile=req.user
+        // console.log(req.body)
         const{emailId,firstName,skills,lastName,age,gender}=req.body
         
         const allowedUpdates=['firstName','lastName','age','gender',"photoUrl","skills","about"]
         
         const isValidOperation=Object.keys(req.body).every((update)=>allowedUpdates.includes(update))
-        const isValidSkills=skills.length<=5
+        const isValidSkills=skills?.length>=5
         
         validateUpdate(req)
 
-        if(!isValidSkills){
+        if(isValidSkills){
             return res.status(400).json({message:'Skills cannot be more than 5'})
         }
 

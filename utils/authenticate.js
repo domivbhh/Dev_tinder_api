@@ -9,6 +9,7 @@ const authenticate = async(req, res, next) => {
             if(jwtVerify){
                 const{_id}=jwtVerify
                 const profile=await User.findById(_id).select('-password -__v')
+                // console.log(profile)
                 req.user=profile
                 next()  
             }
@@ -17,7 +18,7 @@ const authenticate = async(req, res, next) => {
         }
     } 
     else{
-        res.status(400).json({message:'Please login again'})
+        res.status(401).json({message:'Please login again'})
     }
     }
     catch (error) {

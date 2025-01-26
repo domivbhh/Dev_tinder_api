@@ -14,7 +14,10 @@ app.use(cookieParser())
 dotenv.config()
  
 app.use(express.json()) 
-app.use(cors())  
+app.use(cors({
+  origin:"http://localhost:5175",
+  credentials:true
+}))  
 
 
 
